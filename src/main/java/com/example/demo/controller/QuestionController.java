@@ -22,26 +22,6 @@ public class QuestionController {
     private ReplyService replyService;
 
 
-//    @DeleteMapping("/{questionId}")
-//    public ResponseEntity<String> deleteQuestion(@PathVariable Long questionId) {
-//        Optional<Question> question = questionService.getQuestionById(questionId);
-//
-//        if (question.isPresent()) {
-//            // Delete associated replies first
-//            List<Reply> replies = replyService.getRepliesByQuestion(questionId);
-//            for (Reply reply : replies) {
-//                replyService.deleteReply(reply.getId());
-//            }
-//
-//            // Then delete the question
-//            questionService.deleteQuestion(questionId);
-//
-//            return new ResponseEntity<>("Question and associated replies deleted successfully", HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>("Question not found for ID: " + questionId, HttpStatus.NOT_FOUND);
-//        }
-//    }
-
     @GetMapping("/question")
     public ResponseEntity<List<Question>> getQuestion() {
         return new ResponseEntity<>(questionService.getRecentQuestions(),HttpStatus.OK) ;
