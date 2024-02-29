@@ -164,15 +164,12 @@ public class UserController {
         return "User with Id "+userid+"has been deleted";
     }
 
-//new code
 @GetMapping("/admin/count")
 public ResponseEntity<?> countAdmins() {
     long count = userRepository.countByRole("admin");
     return ResponseEntity.ok().body(count);
 }
 
-
-    //new code
 
     @GetMapping("/checkEmailExists/{email}")
     public ResponseEntity<Map<String, Boolean>> checkEmailExists(@PathVariable String email) {
