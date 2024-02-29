@@ -23,8 +23,8 @@ public class QuestionController {
 
 
     @GetMapping("/question")
-    public ResponseEntity<List<Question>> getQuestion() {
-        return new ResponseEntity<>(questionService.getRecentQuestions(),HttpStatus.OK) ;
+    public List<Question> getQuestion() {
+        return questionService.getRecentQuestions();
 //
 //        if (question.isPresent()) {
 //            Map<String, Object> response = new HashMap<>();
@@ -58,5 +58,24 @@ public class QuestionController {
         userResponse.put("email", user.getEmail());
         return userResponse;
     }
-}
 
+    @DeleteMapping("/question/{questionId}")
+    String deleteQuestion(@PathVariable Long questionId) {
+        Optional<Question> question = questionService.getQuestionById(questionId);
+
+        if (question.isPresent()) {
+            // Delete associated replies first
+            List<Reply> replies = replyService.getRepliesByQuestion(questionId);
+            for (Reply reply : replies) {
+                replyService.deleteReply(reply.getId());
+            }
+
+            // Then delete the question
+            questionService.deleteQuestion(questionId);
+
+            return "Question and associated replies deleted successfully";
+        } else {
+            return "Question not found for ID: ";
+        }
+    }
+}
