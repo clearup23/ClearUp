@@ -18,9 +18,9 @@ public class ReplyController {
     private ReplyService replyService;
 
     @GetMapping
-    public ResponseEntity<List<Reply>> getAllReplies() {
+    public List<Reply> getAllReplies() {
         List<Reply> replies = replyService.getAllReplies();
-        return new ResponseEntity<>(replies, HttpStatus.OK);
+        return replyService.getAllReplies();
     }
     @GetMapping("/{questionId}")
     public ResponseEntity<List<Reply>> getRepliesByQuestion(@PathVariable Long questionId) {
@@ -35,5 +35,14 @@ public class ReplyController {
         Reply savedReply = replyService.saveReply(reply);
         return new ResponseEntity<>(savedReply, HttpStatus.CREATED);
     }
-}
 
+    @DeleteMapping("reply/{replyId}")
+    String deleteReply(@PathVariable Long replyId) {
+        boolean deleted = replyService.deleteReply(replyId);
+        if (deleted) {
+            return "Reply deleted successfully";
+        } else {
+            return "Reply not found for ID: " + replyId;
+        }
+    }
+}
