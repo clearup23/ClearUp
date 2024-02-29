@@ -28,15 +28,7 @@ public class ReplyController {
         return new ResponseEntity<>(replies, HttpStatus.OK);
     }
 
-//    @DeleteMapping("/{replyId}")
-//    public ResponseEntity<String> deleteReply(@PathVariable Long replyId) {
-//        boolean deleted = replyService.deleteReply(replyId);
-//        if (deleted) {
-//            return new ResponseEntity<>("Reply deleted successfully", HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>("Reply not found for ID: " + replyId, HttpStatus.NOT_FOUND);
-//        }
-//    }
+
     @PostMapping
     public ResponseEntity<Reply> postReply(@RequestBody Reply reply) {
         reply.setCreatedDate(new Date());
