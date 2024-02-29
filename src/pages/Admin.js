@@ -8,6 +8,7 @@ export default function Admin() {
   const [users, setUsers] = useState([]);
   const [question, setQuestions] = useState([]);
   const [reply, setReplies] = useState([]);
+  const [selectedTable, setSelectedTable] = useState("students"); // Default selected table is 'students'
   const { userDetails } = useUser(); // Get user details from context
   const navigate = useNavigate();
 
@@ -36,7 +37,6 @@ export default function Admin() {
 
   const loadQuestions = async () => {
     const result = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/questions/question`);
-    console.log(result.data);
     setQuestions(result.data);
   };
 
@@ -47,7 +47,6 @@ export default function Admin() {
 
   const loadReplies = async () => {
     const result = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/replies`);
-    console.log(result.data);
     setReplies(result.data);
   };
 
@@ -55,54 +54,82 @@ export default function Admin() {
     await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/replies/reply/${id}`);
     loadReplies();
   };
-  
+
   const openDocument = (url) => {
     window.open(url, "_blank");
   };
 
-  const students = users.filter(user => user.role.toLowerCase() === "student");
-  const teachers = users.filter(user => user.role.toLowerCase() === "teacher");
+  const students = users.filter((user) => user.role.toLowerCase() === "student");
+  const teachers = users.filter((user) => user.role.toLowerCase() === "teacher");
 
   return (
     <div>
       <Navbar />
       <div className="container">
         <div className="py-4">
-          <h2>Students</h2>
-          <table className="table border shadow">
-            <thead>
-              <tr>
-                <th scope="col">S.No</th>
-                <th scope="col">Name</th>
-                <th scope="col">Email</th>
-                {/* <th scope="col">Subject</th> */}
-                <th scope="col">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {students.map((student, index) => (
-                <tr key={index}>
-                  <th scope="row">{index + 1}</th>
-                  <td>{student.name}</td>
-                  <td>{student.email}</td>
-                  {/* <td>{student.subject}</td> */}
-                  <td>
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() => deleteUser(student.id)}
-                      disabled={student.role.toLowerCase() === "admin"}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="btn-group">
+            <button
+              className={`btn ${selectedTable === "students" ? "btn-primary" : "btn-secondary"}`}
+              onClick={() => setSelectedTable("students")}
+            >
+              Students
+            </button>
+            <button
+              className={`btn ${selectedTable === "teachers" ? "btn-primary" : "btn-secondary"}`}
+              onClick={() => setSelectedTable("teachers")}
+            >
+              Teachers
+            </button>
+            <button
+              className={`btn ${selectedTable === "questions" ? "btn-primary" : "btn-secondary"}`}
+              onClick={() => setSelectedTable("questions")}
+            >
+              Questions
+            </button>
+            <button
+              className={`btn ${selectedTable === "replies" ? "btn-primary" : "btn-secondary"}`}
+              onClick={() => setSelectedTable("replies")}
+            >
+              Replies
+            </button>
+          </div>
         </div>
-        
-        <div className="py-4">
-  <h2>Teachers</h2>
+        {selectedTable === "students" && (
+          <div className="py-4">
+            <h2>Students</h2>
+            <table className="table border shadow">
+              <thead>
+                <tr>
+                  <th scope="col">S.No</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {students.map((student, index) => (
+                  <tr key={index}>
+                    <th scope="row">{index + 1}</th>
+                    <td>{student.name}</td>
+                    <td>{student.email}</td>
+                    <td>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => deleteUser(student.id)}
+                        disabled={student.role.toLowerCase() === "admin"}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {selectedTable === "teachers" && (
+          <div className="py-4">
+            <h2>Teachers</h2>
   <table className="table border shadow">
     <thead>
       <tr>
@@ -145,8 +172,11 @@ export default function Admin() {
       ))}
     </tbody>
   </table>
-  <div className="py-4">
-  <h2>Questions</h2>
+          </div>
+        )}
+        {selectedTable === "questions" && (
+          <div className="py-4">
+            <h2>Questions</h2>
   <table className="table border shadow">
     <thead>
       <tr>
@@ -176,9 +206,11 @@ export default function Admin() {
       ))}
     </tbody>
   </table>
-  </div>
-  <div className="py-4">
-  <h2>Replies</h2>
+          </div>
+        )}
+        {selectedTable === "replies" && (
+          <div className="py-4">
+            <h2>Replies</h2>
   <table className="table border shadow">
     <thead>
       <tr>
@@ -210,9 +242,9 @@ export default function Admin() {
       ))}
     </tbody>
   </table>
-  </div>
-</div>
-</div>
-</div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
