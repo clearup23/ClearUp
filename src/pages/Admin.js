@@ -52,7 +52,7 @@ export default function Admin() {
   };
 
   const deleteReplies = async (id) => {
-    await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/replies/replies/${id}`);
+    await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/replies/reply/${id}`);
     loadReplies();
   };
   
